@@ -5,12 +5,15 @@ const connectDB = require("./config/db");
 //load env vars
 dotenv.config({ path: "./config/config.env" });
 
+//connect to database
+connectDB();
+const app = express();
+
 //Route bootcamps
 const bootcamps = require("./routes/bootcamps");
 
-//connec to database
-connectDB();
-const app = express();
+//API body parser
+app.use(express.json());
 
 //Dev logging middleware
 if (process.env.NODE_ENV === "development") {
