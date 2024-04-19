@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
-
+const slugify = require("slugify");
 const BootCampSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, "Please add a name"],
     unique: true, //no fields can be the same name
-    
+
     trim: true, //removes whitespace
     maxLength: [50, "Name cannot exceed 50 characters"],
   },
@@ -42,11 +42,9 @@ const BootCampSchema = new mongoose.Schema({
     type: {
       type: String,
       enum: ["Point"],
-      required: false,
     },
     coordinates: {
       type: [Number],
-      required: false,
       index: "2dsphere",
     },
     formattedAddress: String,
@@ -101,4 +99,9 @@ const BootCampSchema = new mongoose.Schema({
   },
 });
 
+//create bootcamp slug from the name
+BootCampSchema.pre("save", function (next) {
+  this.slug = slugify(this.name, { lower: true });
+  next();
+});
 module.exports = mongoose.model("Bootcamp", BootCampSchema);
